@@ -7,7 +7,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 
 
 
-    contract Launch is  Ownable {
+    contract Vesting is  Ownable {
     using Counters for Counters.Counter;
     Counters.Counter public vestingID;
     mapping(uint256 => VestingDetails) public idToVesting;
@@ -28,17 +28,39 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
         uint256 releasePerEpoch;
         uint256 epoch;
         address owner;
-        uint256 lockID;
-        uint256 vestingID;
+        uint256 saleID;
+        uint256 vesting;
     }
 
     constructor() {}
 
 
-    function vestToken(VestingDetails memory details) public returns(uint256 id){
+    function vestToken(
+        address token,
+        uint256 tokensDeposited,
+        uint256 tokensWithdrawn,
+        uint256 firstWithrawTime,
+        uint256 firstClaimable,
+        uint256 lastWithdrawnTime,
+        uint256 releasePerEpoch,
+        uint256 epoch,
+        address owner,
+        uint256 saleID) public returns(uint256 id){
         require(allowedToCall[msg.sender],"AccessDenied");
         id = vestingID.current();
-        idToVesting[id] = details;
+        idToVesting[id] = VestingDetails({
+        token : token,
+        tokensDeposited: tokensDeposited,
+        tokensWithdrawn: tokensWithdrawn,
+        firstWithrawTime: firstWithrawTime,
+        firstClaimable:firstClaimable,
+        lastWithdrawnTime: lastWithdrawnTime,
+        releasePerEpoch:releasePerEpoch,
+        epoch:epoch,
+        owner:owner,
+        saleID:saleID,
+        vesting: id  
+        });
         vestingID.increment();
         return(id);
     }
@@ -67,6 +89,9 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
         return(amount);
     }
 
+    function updateAllowed(address user, bool allowed) external onlyOwner{
+        allowedToCall[user] = allowed;
+    }
 
 
 }
