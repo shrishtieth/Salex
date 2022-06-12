@@ -1233,7 +1233,7 @@ contract SaleXToken is ERC20, Ownable {
         uint256 total = allHolders.length;
         uint256 supply = totalSupply();
             for(uint256 i=0; i< total; i++){
-                if(balanceOf(allHolders[i])>0)
+                if(balanceOf(allHolders[i])>minimumBalance)
             IERC20(rewardToken).transfer(allHolders[i],(balanceOf(allHolders[i])*amount)/supply);
         }            
 
