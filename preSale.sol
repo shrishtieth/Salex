@@ -93,6 +93,7 @@ function addPreSale(PreSaleDetails memory details, uint256 duration) public retu
        require(canClaim[id]==false,"Cannot claim refund");
        totalEthRaised = totalEthRaised - amountContributed[msg.sender][id];
        amountRaised[id] = amountRaised[id] - amountContributed[msg.sender][id];
+       payable(msg.sender).transfer(amountContributed[msg.sender][id]);
        amountContributed[msg.sender][id] = 0;
        amountEligible[msg.sender][id] = 0;
 
